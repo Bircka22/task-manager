@@ -22,21 +22,3 @@
 
 <img src="screenshots/add_task.png" alt="Добавление задачи" width="500"/>
 <sub>Форма добавления задачи</sub>
-
-## 🛠️ Сборка и запуск
-
-### Зависимости
-- C++17
-- [CMake](https://cmake.org/) ≥ 3.17
-- [nlohmann/json](https://github.com/nlohmann/json)
-
-### Сборка
-
-```bash
-git clone https://github.com/Bircka22/task-manager.git
-cd task-manager
-mkdir build && cd build
-cmake ..
-make
-.\task_manager.exe
-

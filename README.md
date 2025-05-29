@@ -33,7 +33,7 @@
 ### Сборка
 
 ```bash
-git clone https://github.com/yourname/task-manager.git
+git clone https://github.com/Bircka22/task-manager.git
 cd task-manager
 mkdir build && cd build
 cmake ..

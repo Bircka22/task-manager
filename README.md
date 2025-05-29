@@ -38,4 +38,5 @@ cd task-manager
 mkdir build && cd build
 cmake ..
 make
-./task_manager
+.\task_manager.exe
+

@@ -31,11 +31,16 @@ Task jsonToTask(const nlohmann::json& j) {
 
 
 bool Storage::saveToFile(const std::string& path, const std::vector<Task>& tasks) {
+    std::ifstream src(path, std::ios::binary);
+    if (src) {
+        std::ofstream backup(path + ".bak", std::ios::binary);
+        backup << src.rdbuf();
+    }
+
     std::ofstream out(path);
     if (!out) return false;
 
     nlohmann::json j = nlohmann::json::array();
-
     for (const auto& t : tasks) {
         j.push_back(taskToJson(t));
     }

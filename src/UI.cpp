@@ -4,12 +4,17 @@
 #include <fstream>
 #include "nlohmann/json.hpp"
 #include <string>
-#include <Storage.h>
 
-UI::UI(TaskManager& manager) : manager(manager) {}
+UI::UI(TaskManager& manager) : manager(manager) {
+    // Загружаем задачи из файла при запуске программы
+    auto loadedTasks = storage.loadFromFile("tasks.json");
+    for (const auto& task : loadedTasks) {
+        manager.addTask(task.title, task.description, task.priority, task.deadline);
+    }
+}
 
 void UI::run() {
-    while (true) {       
+    while (true) {
         if (!handleInput())
             break;
     }
@@ -97,6 +102,7 @@ void UI::importTasks() {
         }
 
         std::cout << "✅ Импортировано задач: " << j.size() << "\n";
+        storage.saveToFile("tasks.json", manager.getAllTasks()); // Автосохранение
     }
     catch (const std::exception& ex) {
         std::cout << "❌ Ошибка при чтении JSON: " << ex.what() << "\n";
@@ -136,8 +142,9 @@ void UI::addTask() {
     for (int i = 0; i < 11 - len; ++i) std::cout << " ";
     std::cout << "║\n";
     std::cout << "╚══════════════════════════════════════╝\n";
-}
 
+    storage.saveToFile("tasks.json", manager.getAllTasks()); // Автосохранение
+}
 
 void UI::listTasks() const {
     const auto& tasks = manager.getAllTasks();
@@ -156,8 +163,10 @@ void UI::removeTask() {
     std::cin >> id;
     std::cin.ignore();
 
-    if (manager.removeTask(id))
+    if (manager.removeTask(id)) {
         std::cout << "Задача удалена.\n";
+        storage.saveToFile("tasks.json", manager.getAllTasks()); // Автосохранение
+    }
     else
         std::cout << "Задача с таким ID не найдена.\n";
 }
@@ -187,8 +196,10 @@ void UI::editTask() {
     Priority pr = stringToPriority(priorityStr);
     std::optional<std::string> deadline = deadlineInput.empty() ? std::nullopt : std::make_optional(deadlineInput);
 
-    if (manager.editTask(id, title, description, pr, deadline))
+    if (manager.editTask(id, title, description, pr, deadline)) {
         std::cout << "Задача обновлена.\n";
+        storage.saveToFile("tasks.json", manager.getAllTasks()); // Автосохранение
+    }
     else
         std::cout << "Ошибка обновления задачи.\n";
 }
@@ -239,6 +250,7 @@ void UI::markTaskCompleted() {
             task.completed = true;
             std::cout << "✅ Задача помечена как выполненная!\n";
             manager.replaceTask(id, task);
+            storage.saveToFile("tasks.json", manager.getAllTasks()); // Автосохранение
             return;
         }
     }

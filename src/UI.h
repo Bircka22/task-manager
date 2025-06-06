@@ -1,5 +1,6 @@
 #pragma once
 #include "TaskManager.h"
+#include "Storage.h"
 #include <string>
 
 class UI {
@@ -10,8 +11,8 @@ public:
 
 private:
     TaskManager& manager;
+    Storage storage;
 
-    void showMenu() const;
     bool handleInput();
     void addTask();
     void listTasks() const;
